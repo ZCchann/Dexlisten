@@ -1,0 +1,18 @@
+{
+  "wbnb": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+  "busd": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+  "usdc": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+  "usdt": "0x55d398326f99059fF775485246999027B3197955",
+  "scan_api": "CF6J1E556BUW1R22F9S7G5SSCZMEQQUFB8",
+  "factory": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+  "bsc": "wss://bsc.getblock.io/mainnet/?api_key=b78605f2-eb1b-4f85-b602-1eb64d1e98bb",
+  "telegram": {
+    "bot_id": "1968592821:AAH5By7uo1lVZ1pvft1IWS37n7PgnyUm8Xg",
+    "channel_id": "-1001207315367"
+  },
+  "redis": {
+    "addr": "192.168.8.204:6379",
+    "password": "",
+    "database": 0
+  }
+}
