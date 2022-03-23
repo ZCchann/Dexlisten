@@ -1,10 +1,15 @@
 package tasks
 
 import (
+	"coin/pkg/log"
+	"fmt"
 	"reflect"
 	"runtime"
 	"time"
 )
+
+var exit bool
+var running = make(map[string]bool)
 
 // periodicTask 周期任务注册函数
 // 默认每天 00:00:00 执行任务，也可指定时间
@@ -40,7 +45,22 @@ func periodicTask(f func(), opts *CronOpts) {
 
 				<-t.C
 			}
+
+			if exit {
+				break
+			}
+
+			running[funcName] = true
+			log.Info("Received task:", funcName)
+			startTime := time.Now().Unix()
 			f()
+			endTime := time.Now().Unix()
+			log.Info(fmt.Sprintf(
+				"Task %s successed in %d second",
+				funcName,
+				endTime-startTime),
+			)
+			delete(running, funcName)
 		}
 	}()
 }

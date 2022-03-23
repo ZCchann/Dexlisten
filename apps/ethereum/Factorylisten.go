@@ -16,8 +16,8 @@ import (
 	"time"
 )
 
-func Factorylisten() {
-	contractAddress := common.HexToAddress(conf.Conf().Factory) //加载工厂合约地址
+func Factorylisten(FactoryAddress string) {
+	contractAddress := common.HexToAddress(FactoryAddress) //加载工厂合约地址
 	query := ethereum.FilterQuery{ //创建连接队列
 		Addresses: []common.Address{contractAddress},
 	}
@@ -47,6 +47,7 @@ func Factorylisten() {
 				log.Error("Failed to unpack")
 				continue
 			}
+
 			token0 := common.BytesToAddress(vLog.Topics[1].Bytes())
 			token1 := common.BytesToAddress(vLog.Topics[2].Bytes())
 			lptoken := m["pair"].(common.Address)
@@ -85,15 +86,27 @@ func Factorylisten() {
 				pair = "USDC"
 				ierc20address = token1.String()
 			default:
-				pair = ""
-				ierc20address = ""
+				continue
+			}
+			var swap string
+			switch {
+			case FactoryAddress == conf.Conf().Contract.Pancake:
+				swap = "PancakeSwap"
+			case FactoryAddress == conf.Conf().Contract.Biswap:
+				swap = "Biswap"
+			case FactoryAddress == conf.Conf().Contract.ApeSwap:
+				swap = "ApeSwap"
 			}
 
 			if pair != "" {
-				var b *information                                     //保存燃烧检查的结果
+				var b *information //保存燃烧检查的结果
+				log.Info("本次交易哈希: ", vLog.TxHash)
+				log.Info("代币合约地址: ", ierc20address)
+				log.Info("交易所: ",swap)
 				b, err = burnCheck(common.HexToAddress(ierc20address)) //发动代币合约做燃烧检查
 				if err != nil {
-					log.Error(err)
+					log.Error("燃烧检查错误", err)
+					continue
 				}
 				name := b.name                                      //代币名称
 				symbol := b.symbol                                  //代币符号
@@ -101,19 +114,19 @@ func Factorylisten() {
 				burn := b.burn                                      //燃烧检查结果
 
 				if totalSupply.Cmp(decimal.NewFromInt(1000000)) == 1 || totalSupply.Cmp(decimal.NewFromInt(1000000)) == 0 {
-					redis_hset(ierc20address, name, symbol, burn, pair, lptoken.String(), totalSupply.String()) //结果保存到redis内
+					log.Info("保存结果至redis",ierc20address)
+					redis_hset(ierc20address, swap, name, symbol, burn, pair, lptoken.String(), totalSupply.String()) //结果保存到redis内
 				}
-
 			}
-
 		}
 	}
 }
 
-func redis_hset(ierc20address string, name string, symbol string, burn bool, pair string, LP_token_address string, totalSupply string) {
+func redis_hset(ierc20address string, swap string, name string, symbol string, burn bool, pair string, LP_token_address string, totalSupply string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	redisdb := db.RDB.HMSet(ctx, ierc20address, map[string]interface{}{
+		"swap":             swap,
 		"name":             name,
 		"symbol":           symbol,
 		"burn":             burn,

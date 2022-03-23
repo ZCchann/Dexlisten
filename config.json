@@ -6,13 +6,18 @@
   "scan_api": "CF6J1E556BUW1R22F9S7G5SSCZMEQQUFB8",
   "factory": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
   "bsc": "wss://bsc.getblock.io/mainnet/?api_key=b78605f2-eb1b-4f85-b602-1eb64d1e98bb",
+  "contract": {
+    "pancake": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+    "biswap": "0x858E3312ed3A876947EA49d572A7C42DE08af7EE",
+    "apeswap": "0x0841BD0B734E4F5853f0dD8d7Ea041c241fb0Da6"
+  },
   "telegram": {
     "bot_id": "1968592821:AAH5By7uo1lVZ1pvft1IWS37n7PgnyUm8Xg",
     "channel_id": "-1001207315367"
   },
   "redis": {
-    "addr": "192.168.8.204:6379",
+    "addr": "192.168.1.200:6379",
     "password": "",
-    "database": 0
+    "database": 9
   }
 }

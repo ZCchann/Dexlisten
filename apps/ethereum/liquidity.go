@@ -2,7 +2,7 @@ package ethereum
 
 import (
 	"coin/apps/db"
-	"coin/apps/telegram_bot"
+	//"coin/apps/telegram_bot"
 	"coin/apps/web3"
 	"coin/pkg/log"
 	"context"
@@ -18,14 +18,15 @@ func LiquidityETH() {
 		panic(err)
 	}
 	for _, i := range keys {
-		var lp_number *big.Int //LP池中价格锚定代币的数量
+		var lp_number *big.Int       //LP池中价格锚定代币的数量
 		ret, err := redis_hgetall(i) //取redis的值
 		if err != nil {
-			panic(err)
+			log.Info(err)
+			continue
 		}
 		if n, err := CallLP(common.HexToAddress(ret["LP_token_address"])); err == nil && n != nil {
 			lp_number = n
-			if lp_number.Cmp(big.NewInt(0)) != 0 {  //判断流动性数量是不是大于0
+			if lp_number.Cmp(big.NewInt(0)) == 1 && lp_number.Cmp(web3.ToWei("10","ether")) == 1 { //判断流动性数量是不是大于0
 				var burncheck string
 				if ret["burn"] == "1" {
 					burncheck = "检出此合约含有燃烧地址，可能带有燃烧"
@@ -42,7 +43,7 @@ func LiquidityETH() {
 				}
 				//整合成string
 				var message strings.Builder
-				message.WriteString("PancakeSwap添加了新的交易币对:\n")
+				message.WriteString(ret["swap"] + "添加了新的交易币对:\n")
 				message.WriteString("代币名称: " + ret["name"] + "\n")
 				message.WriteString("代币符号: " + ret["symbol"] + "\n")
 				message.WriteString("代币总发行量: " + ret["totalSupply"] + "\n")
@@ -52,8 +53,11 @@ func LiquidityETH() {
 				message.WriteString("合约地址: " + i + "\n")
 				message.WriteString("Pancake LP代币地址: " + ret["LP_token_address"] + "\n")
 				s3 := message.String()
-				telegram_bot.SendMessage(s3) //使用telegram发送信息到频道
-				redis_hdel(i) //跑完了 删除信息
+				log.Info(s3)
+				//telegram_bot.SendMessage(s3) //使用telegram发送信息到频道
+				redis_hdel(i)                //跑完了 删除信息
+			} else if lp_number.Cmp(big.NewInt(0)) == 1 && lp_number.Cmp(web3.ToWei("10","ether")) == -1 {
+				redis_hdel(i) //初始流动性太低 大概率是跑路池 删信息
 			}
 		} else {
 			redis_hdel(i)

@@ -21,22 +21,22 @@ func burnCheck(address common.Address) (*information,error) {
 	var information information
 	cont, err := contract.NewIERC20(address, Client) //连接
 	if err != nil {
-		log.Error(err)
+		log.Error("连接合约错误",err)
 		return nil, err
 	}
 	name, err := cont.Name(&bind.CallOpts{})
 	if err != nil{
-		panic(err)
+		log.Error("获取代币名称错误",err)
 		return nil, err
 	}
 	symbol, err := cont.Symbol(&bind.CallOpts{})
 	if err != nil{
-		panic(err)
+		log.Error("获取代币symbol错误",err)
 		return nil, err
 	}
 	totalSupply, err := cont.TotalSupply(&bind.CallOpts{})
 	if err != nil{
-		panic(err)
+		log.Error("获取代币发行总量错误",err)
 		return nil, err
 	}
 

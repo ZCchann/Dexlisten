@@ -365,7 +365,7 @@ func (_PancakeLP *PancakeLPCallerSession) Decimals() (uint8, error) {
 	return _PancakeLP.Contract.Decimals(&_PancakeLP.CallOpts)
 }
 
-// Factory is a free data retrieval call binding the contract method 0xc45a0155.
+// Pancake is a free data retrieval call binding the contract method 0xc45a0155.
 //
 // Solidity: function factory() view returns(address)
 func (_PancakeLP *PancakeLPCaller) Factory(opts *bind.CallOpts) (common.Address, error) {
@@ -382,14 +382,14 @@ func (_PancakeLP *PancakeLPCaller) Factory(opts *bind.CallOpts) (common.Address,
 
 }
 
-// Factory is a free data retrieval call binding the contract method 0xc45a0155.
+// Pancake is a free data retrieval call binding the contract method 0xc45a0155.
 //
 // Solidity: function factory() view returns(address)
 func (_PancakeLP *PancakeLPSession) Factory() (common.Address, error) {
 	return _PancakeLP.Contract.Factory(&_PancakeLP.CallOpts)
 }
 
-// Factory is a free data retrieval call binding the contract method 0xc45a0155.
+// Pancake is a free data retrieval call binding the contract method 0xc45a0155.
 //
 // Solidity: function factory() view returns(address)
 func (_PancakeLP *PancakeLPCallerSession) Factory() (common.Address, error) {

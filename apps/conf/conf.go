@@ -11,11 +11,16 @@ type (
 		Busd     string   `json:"busd"         desc:"BUSD"`
 		Usdc     string   `json:"usdc"         desc:"usdc"`
 		Usdt     string   `json:"usdt"         desc:"usdt"`
-		Redis    redis    `json:"redis"        desc:"redis"`
 		ScanApi  string   `json:"scan_api"     desc:"区块链浏览器Api地址"`
-		Factory  string   `json:"factory"      desc:"PancakeSwap: Factory v2合约地址"`
 		BscRPC   string   `json:"bsc"          desc:"BSC主网链接"`
 		Telegram telegram `json:"telegram"     desc:"telegram"`
+		Contract contract `json:"contract"     desc:"contract"`
+		Redis    redis    `json:"redis"        desc:"redis"`
+	}
+	contract struct {
+		Pancake string `json:"pancake"      desc:"PancakeSwap: Pancake v2合约地址"`
+		Biswap  string `json:"biswap"       desc:"Biswap: Factory 合约地址"`
+		ApeSwap string `json:"apeswap"       desc:"ApeSwap: ApeFactory 合约地址"`
 	}
 	redis struct {
 		Addr     string `json:"addr"`
