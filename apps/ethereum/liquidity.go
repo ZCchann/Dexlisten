@@ -2,7 +2,7 @@ package ethereum
 
 import (
 	"coin/apps/db"
-	//"coin/apps/telegram_bot"
+	"coin/apps/telegram_bot"
 	"coin/apps/web3"
 	"coin/pkg/log"
 	"context"
@@ -43,7 +43,7 @@ func LiquidityETH() {
 				}
 				//整合成string
 				var message strings.Builder
-				message.WriteString(ret["swap"] + "添加了新的交易币对:\n")
+				message.WriteString("#" + ret["swap"] + " 添加了新的交易币对:\n")
 				message.WriteString("代币名称: " + ret["name"] + "\n")
 				message.WriteString("代币符号: " + ret["symbol"] + "\n")
 				message.WriteString("代币总发行量: " + ret["totalSupply"] + "\n")
@@ -53,8 +53,7 @@ func LiquidityETH() {
 				message.WriteString("合约地址: " + i + "\n")
 				message.WriteString("Pancake LP代币地址: " + ret["LP_token_address"] + "\n")
 				s3 := message.String()
-				log.Info(s3)
-				//telegram_bot.SendMessage(s3) //使用telegram发送信息到频道
+				telegram_bot.SendMessage(s3) //使用telegram发送信息到频道
 				redis_hdel(i)                //跑完了 删除信息
 			} else if lp_number.Cmp(big.NewInt(0)) == 1 && lp_number.Cmp(web3.ToWei("10","ether")) == -1 {
 				redis_hdel(i) //初始流动性太低 大概率是跑路池 删信息

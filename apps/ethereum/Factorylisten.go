@@ -100,9 +100,6 @@ func Factorylisten(FactoryAddress string) {
 
 			if pair != "" {
 				var b *information //保存燃烧检查的结果
-				log.Info("本次交易哈希: ", vLog.TxHash)
-				log.Info("代币合约地址: ", ierc20address)
-				log.Info("交易所: ",swap)
 				b, err = burnCheck(common.HexToAddress(ierc20address)) //发动代币合约做燃烧检查
 				if err != nil {
 					log.Error("燃烧检查错误", err)
@@ -114,7 +111,6 @@ func Factorylisten(FactoryAddress string) {
 				burn := b.burn                                      //燃烧检查结果
 
 				if totalSupply.Cmp(decimal.NewFromInt(1000000)) == 1 || totalSupply.Cmp(decimal.NewFromInt(1000000)) == 0 {
-					log.Info("保存结果至redis",ierc20address)
 					redis_hset(ierc20address, swap, name, symbol, burn, pair, lptoken.String(), totalSupply.String()) //结果保存到redis内
 				}
 			}
